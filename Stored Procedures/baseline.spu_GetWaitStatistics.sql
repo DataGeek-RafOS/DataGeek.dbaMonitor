@@ -126,9 +126,9 @@ BEGIN
            , @vn_DaysToPurge_WaitStatSnapshot int = 30;
 
      -- Verifica a existência das tabelas
-     IF ( SELECT OBJECT_ID('dbaMonitor.dbo.WaitStatistics') ) IS NULL
+     IF ( SELECT OBJECT_ID('dbaMonitor.baseline.WaitStatistics') ) IS NULL
      BEGIN
-          RAISERROR('A tabela dbo.WaitStatistics não foi encontrada no banco de dados [dbaMonitor].', 16, 1);
+          RAISERROR('A tabela baseline.WaitStatistics não foi encontrada no banco de dados [dbaMonitor].', 16, 1);
           RETURN -1;
      END;
 
@@ -143,7 +143,7 @@ BEGIN
 		BEGIN TRANSACTION;
 
      -- Purge Wait Statistics
-     DELETE FROM dbo.WaitStatistics
+     DELETE FROM baseline.WaitStatistics
      WHERE CollectionDate < DATEADD(DAY, (-1 * @vn_DaysToPurge_WaitStats), CURRENT_TIMESTAMP);
 
      IF @@ERROR = 0
@@ -240,7 +240,7 @@ BEGIN
      BEGIN TRY;
 
           -- Insere as estatísticas
-          INSERT INTO dbo.WaitStatistics
+          INSERT INTO baseline.WaitStatistics
                    (
                      [Priority]
                    , [CollectionDate]
